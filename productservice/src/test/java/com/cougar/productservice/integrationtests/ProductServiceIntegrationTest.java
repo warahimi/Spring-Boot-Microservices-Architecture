@@ -52,7 +52,7 @@ public class ProductServiceIntegrationTest {
     */
     @Test
     void shouldCreateProduct() throws Exception {
-        ProductRequest productRequest = getProductRequest();
+        ProductRequest productRequest = getProductRequest("iphone 12","Promax", BigDecimal.valueOf(1200));
         String productRequestString = objectMapper.writeValueAsString(productRequest);
         // to make a request from integration test we use mock nvc object which provide mock servlete environment where we can call the endpoints
         mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
@@ -71,7 +71,7 @@ public class ProductServiceIntegrationTest {
     @Test
     void shouldGetAllProducts() throws Exception {
         // First, create a product
-        ProductRequest productRequest = getProductRequest();
+        ProductRequest productRequest = getProductRequest("Galaxy","Note 9", BigDecimal.valueOf(1000));
         String productRequestString = objectMapper.writeValueAsString(productRequest);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -85,13 +85,18 @@ public class ProductServiceIntegrationTest {
                 .andExpect(jsonPath("$.size()").value(2))
                 .andExpect(jsonPath("$[0].name").value("iphone 12"))
                 .andExpect(jsonPath("$[0].description").value("Promax"))
-                .andExpect(jsonPath("$[0].price").value(1200));
+                .andExpect(jsonPath("$[0].price").value(1200))
+
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[1].name").value("Galaxy"))
+                .andExpect(jsonPath("$[1].description").value("Note 9"))
+                .andExpect(jsonPath("$[1].price").value(1000));
     }
-    private ProductRequest getProductRequest() {
+    private ProductRequest getProductRequest(String name, String description, BigDecimal price) {
         return ProductRequest.builder()
-                .name("iphone 12")
-                .description("Promax")
-                .price(BigDecimal.valueOf(1200))
+                .name(name)
+                .description(description)
+                .price(price)
                 .build();
     }
 
