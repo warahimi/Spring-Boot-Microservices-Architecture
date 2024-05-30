@@ -20,6 +20,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 
 @SpringBootTest
 @Testcontainers
@@ -60,8 +62,31 @@ public class ProductServiceIntegrationTest {
 
         // verify the insertion
         Assertions.assertEquals(1, productRepository.findAll().size());
+        Assertions.assertEquals("iphone 12", productRepository.findByName("iphone 12").getName());
+        Assertions.assertEquals("Promax", productRepository.findByName("iphone 12").getDescription());
+        Assertions.assertEquals(BigDecimal.valueOf(1200), productRepository.findByName("iphone 12").getPrice());
     }
+    // getProduct end point test
 
+    @Test
+    void shouldGetAllProducts() throws Exception {
+        // First, create a product
+        ProductRequest productRequest = getProductRequest();
+        String productRequestString = objectMapper.writeValueAsString(productRequest);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(productRequestString))
+                .andExpect(status().isCreated());
+
+        // Then, retrieve all products and verify the response
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/product")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].name").value("iphone 12"))
+                .andExpect(jsonPath("$[0].description").value("Promax"))
+                .andExpect(jsonPath("$[0].price").value(1200));
+    }
     private ProductRequest getProductRequest() {
         return ProductRequest.builder()
                 .name("iphone 12")
@@ -69,4 +94,5 @@ public class ProductServiceIntegrationTest {
                 .price(BigDecimal.valueOf(1200))
                 .build();
     }
+
 }
