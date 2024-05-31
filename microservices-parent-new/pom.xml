@@ -17,12 +17,14 @@
         <module>productservice</module>
         <module>orderservice</module>
         <module>inventoryservice</module>
+        <module>discovery-server</module>
     </modules>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
     </properties>
 
     <!-- test container -->
@@ -35,7 +37,27 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+<!--            &lt;!&ndash; Eureka Client &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
+<!--            </dependency>-->
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+                <version>4.1.1</version>
+            </dependency>
+
         </dependencies>
+
     </dependencyManagement>
     <build>
         <plugins>

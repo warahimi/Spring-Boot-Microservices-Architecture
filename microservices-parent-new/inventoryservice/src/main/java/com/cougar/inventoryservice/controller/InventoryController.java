@@ -1,9 +1,12 @@
 package com.cougar.inventoryservice.controller;
 
+import com.cougar.inventoryservice.dto.InventoryResponse;
 import com.cougar.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -11,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class InventoryController {
 
     private final InventoryService inventoryService;
-    @GetMapping("/{skuCode}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean isInStock(@PathVariable("sku-code") String skuCode)
+    public List<InventoryResponse> isInStock(@RequestParam List<String> skuCodes) // take list skuCodes as request parameter
     {
-        return inventoryService.isInStock(skuCode);
+        return inventoryService.isInStock(skuCodes);
     }
 }
